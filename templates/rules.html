@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class='card'>
+    <div class='card-header'>
+        <h1 class='card-title'>Exfilter Rules</h1>
+    </div>
+    <div class='card-body'>
+        <form method="POST" id="rules_form" action="/rules/">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-6">
+
+                </div>
+                <div class="col-6">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col" id = "editor" contenteditable="true">{{ rules| linebreaks }}</div>
+            </div>
+            <div class="row mt-4">
+                <div class="col">
+                    <button class="btn btn-success" type="submit" >Save</button>
+                    <a class="btn btn-warning">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+     <script src="https://cdn.ckeditor.com/4.17.2/standard-all/ckeditor.js"></script>
+    <script>
+    {#CKEDITOR#}
+    {#    .create( document.querySelector( '#editor' ) )#}
+    {#    .catch( error => {#}
+    {#        console.error( error );#}
+    {#    } );#}
+    {#CKEDITOR#}
+    CKEDITOR.disableAutoInline = true;
+    CKEDITOR.inline('editor');
+
+    String.prototype.deentitize = function() {
+        var ret = this.replace(/&gt;/g, '>');
+        ret = ret.replace(/&lt;/g, '<');
+        ret = ret.replace(/&quot;/g, '"');
+        ret = ret.replace(/&apos;/g, "'");
+        ret = ret.replace(/&amp;/g, '&');
+        return ret;
+    };
+
+    var frm = $('#rules_form');
+
+    frm.submit(function (e) {
+        e.preventDefault();
+        let rules = CKEDITOR.instances.editor.getData();
+        rules = rules.replace(/<br\s*[\/]?>/gi, "\n");
+        rules = rules.deentitize();
+
+        console.log(rules);
+
+        $.ajax({
+            type: frm.attr('method'),
+            dataType: 'json',
+            url: frm.attr('action'),
+            data: {
+              rules: rules,
+              csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (data) {
+                console.log('Submission was successful.');
+                console.log(data);
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+            },
+        });
+    });
+    </script>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "users/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block breadcrumbs %}
+{{ block.super }}
+<li class="breadcrumb-item">Delete User</li>
+{% endblock %}
+
+{% block content %}
+<div class='card'>
+    <div class='card-header'>
+        <h1 class='card-title'>Confirm Delete of User</h1>
+    </div>
+    <div class='card-body'>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col">
+                    <b>Name</b>
+                </div>
+                <div class="col">
+                    <b>Username</b>
+                </div>
+                <div class="col">
+                    <b>Email</b>
+                </div>
+                <div class="col">
+                    <b>Group</b>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ object.name }}
+                </div>
+                <div class="col">
+                    {{ object.username }}
+                </div>
+                <div class="col">
+                    {{ object.email }}
+                </div>
+                <div class="col">
+                    {{ object.groups.first }}
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col">
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                </div>
+                <div class="col text-right">
+                    <a class="btn btn-warning" href="{% url 'user-list' %}">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>        
+</div>
+{% endblock %}

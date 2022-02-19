@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>PID</th>
+      <th>Source Address</th>
+      <th>Dest Address</th>
+      <th>Data</th>
+      <th>Message</th>
+      <th>Timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for event in events %}
+      <tr>
+        <td>{{ event.Pid }}</td>
+        <td>{{ event.Saddr }}</td>
+        <td>{{ event.Daddr }}</td>
+        <td>{{ event.Data }}</td>
+        <td>{{ event.Msg }}</td>
+        <td>{{ event.Timestamp_ns }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if events.has_other_pages %}
+  <ul class="pagination">
+    {% if events.has_previous %}
+      <li><a href="?page={{ events.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in events.paginator.page_range %}
+      {% if events.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if events.has_next %}
+      <li><a href="?page={{ events.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+{% endblock content %}

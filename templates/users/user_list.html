@@ -1,0 +1,52 @@
+{% extends "users/base.html" %}
+{% load table_extras %}
+
+{% block content %}
+<div class='card'>
+    <div class='card-header'>
+        <div class="row">
+            <div class="col-sm-6">
+                <h1 class='card-title'>Users</h1>
+                <b>
+                    {% if page_obj.has_other_pages %}
+                        {{ page_obj.start_index }} - {{ page_obj.end_index }} of
+                    {% endif %}
+                    {{ page_obj.paginator.count }} Users
+                </b>
+            </div>
+            <div class="col-sm-6 text-right">
+                <a class="btn btn-primary mt-4 mr-4" href="{% url 'user-create' %}">NEW USER</a>
+            </div>
+        </div>
+    </div>
+    <div class='card-body'>
+        <div class="table-responsive">
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Group</th>
+                        <th scope="col" style="white-space: nowrap; width: 1%;"></th>
+                        <th scope="col" style="white-space: nowrap; width: 1%;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in object_list %}
+                        <tr>
+                            <td scope="row">{{ user.first_name }} {{ user.last_name }}</td>
+                            <td>{{ user.email|default:"----" }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.groups.first|default:"----" }}</td>
+                            <td style="white-space: nowrap; width: 1%;"><a class="btn btn-outline-primary" href="{% url 'user-update' user.pk %}">Edit</a></td>
+                            <td style="white-space: nowrap; width: 1%;"><a class="btn btn-outline-danger" href="{% url 'user-delete' user.pk %}">Delete</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% render_paginator %}
+        </div>
+    </div>        
+</div>
+{% endblock %}

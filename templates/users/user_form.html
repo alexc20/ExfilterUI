@@ -1,0 +1,41 @@
+{% extends "users/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block breadcrumbs %}
+{{ block.super }}
+<li class="breadcrumb-item">{% if object %}Update{% else %}Create{% endif %} User</li>
+{% endblock %}
+
+{% block content %}
+<div class='container mt-4'>
+    <div class="card">
+        <div class='card-header'>
+            <div class="row">
+                <div class="col">
+                    <h2 class='card-title'>
+                        {% if object %}
+                        Update Account: {{ object.first_name }} {{ object.last_name }}
+                        {% else %}
+                        New User
+                        {% endif %}
+                    </h2>
+                </div>
+                {% if object == user %}
+                    <div class="col text-right">
+                        <a class='btn btn-warning' href="{% url 'password_change' %}">Change Password</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class='form-group text-right'>
+                    <button class='btn btn-outline-success' type='submit'>Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
