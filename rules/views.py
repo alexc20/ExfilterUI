@@ -14,9 +14,9 @@ def rules_view(request):
         rules = request.POST.get('rules')
         rules = strip_tags(rules)
         confmaps.data["example.rules"] = rules
-        print(confmaps)
         newconfmaps = v1.replace_namespaced_config_map(name="ebpf-policy",namespace="default", body=confmaps)
         rules = newconfmaps.data["example.rules"]
+
         return JsonResponse({"rules": rules})
 
     # Configs can be set in Configuration class directly or using helper utility

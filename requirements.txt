@@ -1,0 +1,5 @@
+django
+djangorestframework
+kubernetes
+django-ckeditor
+django-crispy-forms
